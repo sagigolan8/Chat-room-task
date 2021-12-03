@@ -1,0 +1,13 @@
+.fa-user{
+    position: relative;
+    top: 19%;
+    border: 2px solid black;
+    border-radius: 17px;
+    margin:auto;
+    padding:4px;
+    font-size: 20px;
+}   
+.name-meta{
+    position: relative;
+    top: 19%;
+}
