@@ -13,35 +13,40 @@ export default function Chat(){
   const [messeges, setMesseges] = useState(["welcome"])
   let [users, setUsers] = useState([])
 
-
   
   async function getUsers(){
-    console.log('here');
     const {data} = await axios.get(`http://localhost:8080/users`)
     return data
   }
 
   useEffect(async () => {
-    console.log('hi');
     setUsers(await getUsers())
   }, [])
   
 
+  useEffect(async () => {
+    setUsers(await getUsers())
+  }, [messeges])
+
   const changeUser = (user)=>{
-    displayUser.current.textContent = user.username
-    setCurrentUserId(user._id)
-    console.log(currentUserId);
+     setMesseges(user.messeges)
+     displayUser.current.textContent = user.username
+     setCurrentUserId(user._id)
   }
-  console.log(users);
+
   const addMessege = async()=>{
-    // console.log("in addMessege");
-    if(!textareaEl.current.value) return
-    
-    // setMesseges(messeges.concat(textareaEl.current.value))
+    const messege = textareaEl.current.value 
+    if(!messege) return
+    // await axios.put('http://localhost:8080/newMessege',{
+    //   _id: currentUserId,
+    //   messege
+    // })
     // textareaEl.current.value = ''
+    // const event = new EventSource(`http://localhost:8080/users`);
+    // event.onmessage = (e) => {
+    //   console.log(e.data);
+    // }
   }
-
-
 
   return(
   <div className="container app">
@@ -54,42 +59,17 @@ export default function Chat(){
             </div>
           </div>
   
-           {/* <div className="row searchBox">
-            <div className="col-sm-12 searchBox-inner">
-              <div className="form-group has-feedback">
-                <input id="searchText" type="text" className="form-control" name="searchText" placeholder="Search"/>
-                <span className="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-            </div>
-          </div>  */}
-  
            {/* all users  */}
           <div className="row sideBar">
 
           
           {users.map((user)=>{
-            return <User key={user.username} onClick={changeUser} user={user} />
+            return <User 
+            key={user.username} 
+             onClick={changeUser} 
+             user={user} 
+             />
           })}
-
-
-            {/* <User name="mimi"/> */}
-
-             {/* className="row sideBar-body" === user */}
-            {/* <div className="row sideBar-body">
-              <div className="col-sm-3 col-xs-3 sideBar-avatar">
-                <div className="avatar-icon">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png"/>
-                </div>
-              </div>
-              <div className="col-sm-9 col-xs-9 sideBar-main">
-                <div className="row">
-                  <div className="col-sm-8 col-xs-8 sideBar-name">
-                    <span className="name-meta">John Doe
-                  </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
 
           </div>
         </div>
@@ -114,11 +94,6 @@ export default function Chat(){
               </div>
             </div>
           </div>
-  
-          
-          
-          
-          
           
           {/* messeges area */}
           <div className="row compose-sideBar">
@@ -141,7 +116,9 @@ export default function Chat(){
           </div>
         </div>
       </div>
+
       {/* change user */}
+
       <div className="col-sm-8 conversation">
         <div className="row heading">
           <div className="col-sm-2 col-md-1 col-xs-3 heading-avatar">
@@ -162,18 +139,6 @@ export default function Chat(){
             })}
             
             {/* Messege */}
-          {/* <div className="row message-body">
-            <div className="col-sm-12 message-main-receiver">
-              <div className="receiver">
-                <div className="message-text" >
-                 Hi, what are you doing?!
-                </div>
-                <span id="kuku" className="message-time pull-right">
-                  
-                </span>
-              </div>
-            </div>
-          </div> */}
 
           <div className="row message-body">
             <div className="col-sm-12 message-main-receiver">
@@ -187,8 +152,6 @@ export default function Chat(){
               </div>
             </div>
           </div>
-  
-
         </div>
   
         <div className="row reply">

@@ -4,7 +4,7 @@ import {niceAlert} from '../helpers/niceAlerts'
 import { Switch } from '@mui/material';
 import axios from 'axios'
 
-export default function User({user,onClick}) {
+export default function User({user,onClick,setCurrentUserId}) {
   const {username,status,_id} = user
   const [checkStatus, setCheckStatus] = useState(status) // true for online, false for offline
 

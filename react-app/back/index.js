@@ -32,10 +32,17 @@ app.put('/newMessege',async(req,res)=>{
   res.send(response)
 })
 
+app.post('/stream/messege',async(req,res)=>{
+  const {messege} = req.body  
+
+})
+
 app.get('/users',async(req,res)=>{
   const users = await User.find()
-  res.send(users)
+  res.send(users)  
 })
+
+
 
 app.put('/setStatus',async(req,res)=>{
   const {status,_id} = req.body
