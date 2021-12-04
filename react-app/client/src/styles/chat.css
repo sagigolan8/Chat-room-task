@@ -602,13 +602,26 @@ body {
   border-radius: 10px;
   -webkit-box-shadow: inset 6px 6px 6px rgba(0, 0, 0, 0.897);
    background-color: #555;
-  background: hsl(210, 30%, 0%)
-    radial-gradient(hsl(210, 30%, 20%), hsl(210, 30%, 0%));
+  background: rgb(71, 182, 57)
+    radial-gradient(hsl(210, 30%, 20%), rgb(71, 182, 57));
 }
 #style-1::-webkit-hover {
   border-radius: 10px;
   -webkit-box-shadow: inset 6px 6px 6px rgba(0, 0, 0, 0.3);
    background-color: #555;
-  background: hsl(210, 30%, 0%)
-    radial-gradient(hsl(210, 30%, 20%), hsl(210, 30%, 0%));
+  background: rgb(71, 182, 57)
+    radial-gradient(hsl(210, 30%, 20%), rgb(71, 182, 57));
+}
+.fa-user{
+  position: relative;
+  top: 19%;
+  border: 2px solid black;
+  border-radius: 17px;
+  margin:auto;
+  padding:4px;
+  font-size: 20px;
+}   
+.name-meta{
+  position: relative;
+  top: 19%;
 }

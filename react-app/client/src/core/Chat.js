@@ -1,42 +1,48 @@
-import React,{useState, useEffect,useRef} from "react";
+import React,{useState, useEffect,useRef,useContext} from "react";
 import '../styles/chat.css'
 import User from "./User";
-import { useLocation } from 'react-router'
 import Messege from "./Messege";
-
+import axios from 'axios'
 
 
 export default function Chat(){
+
+  const displayUser = useRef(null)
+  const [currentUserId, setCurrentUserId] = useState(null)
   const textareaEl = useRef(null)
   const [messeges, setMesseges] = useState(["welcome"])
-  const [time, setTime] = useState([])
-  const {search} = useLocation()
-  const getParam = search.slice(9)
-  let [users, setUsers] = useState(['sagi'])
- 
-  // const addUser = ()=>{
-  //   // console.log('in addUser');
-  //   // const tempArray = [...users]
-  //   // if(getParam === '' && search.slice(0,9) !== '?addUser=' && users.includes(getParam)) 
-  //   // return
-  //   setUsers(users.concat(getParam))
-  //   console.log(users);
-  // }
+  let [users, setUsers] = useState([])
 
-  // useEffect(() => {
-  //   addUser()
-  // }, []);
 
-  const addMessege = ()=>{
+  
+  async function getUsers(){
+    console.log('here');
+    const {data} = await axios.get(`http://localhost:8080/users`)
+    return data
+  }
+
+  useEffect(async () => {
+    console.log('hi');
+    setUsers(await getUsers())
+  }, [])
+  
+
+  const changeUser = (user)=>{
+    displayUser.current.textContent = user.username
+    setCurrentUserId(user._id)
+    console.log(currentUserId);
+  }
+  console.log(users);
+  const addMessege = async()=>{
     // console.log("in addMessege");
     if(!textareaEl.current.value) return
-    setMesseges(messeges.concat(textareaEl.current.value))
-    textareaEl.current.value = ''
+    
+    // setMesseges(messeges.concat(textareaEl.current.value))
+    // textareaEl.current.value = ''
   }
-  // useEffect(() => {
-  //   // addMessege()
 
-  // }, [messeges])
+
+
   return(
   <div className="container app">
     <div className="row app-one">
@@ -60,8 +66,9 @@ export default function Chat(){
            {/* all users  */}
           <div className="row sideBar">
 
+          
           {users.map((user)=>{
-            return <User name={user} />
+            return <User key={user.username} onClick={changeUser} user={user} />
           })}
 
 
@@ -134,24 +141,24 @@ export default function Chat(){
           </div>
         </div>
       </div>
-  
+      {/* change user */}
       <div className="col-sm-8 conversation">
         <div className="row heading">
           <div className="col-sm-2 col-md-1 col-xs-3 heading-avatar">
             <div style={{ cursor: 'default'}} className="heading-avatar-icon">
-              <img  src="https://bootdey.com/img/Content/avatar/avatar6.png"/>
+            <i style={{backgroundColor:'greenyellow'}} className="far fa-user"></i>
             </div>
           </div>
           <div className="col-sm-8 col-xs-7 heading-name">
-            <span className="heading-name-meta">John Doe
+            <span ref={displayUser} className="heading-name-meta">
             </span>
-            <span className="heading-online">Online</span>
+            <span className="heading-online"></span>
           </div>
         </div>
   
         <div className="row message" id="conversation">
             {messeges.map((msg)=>{
-              return <Messege time={Date(Date.now())} msg={msg}/>
+              return <Messege key={msg} time={Date(Date.now())} msg={msg}/>
             })}
             
             {/* Messege */}
