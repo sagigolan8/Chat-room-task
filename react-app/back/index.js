@@ -1,57 +1,24 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
-const express = require("express");
+const express = require("express")
 const app = express();
-const cors = require("cors");
-const User = require('./model/UserScheme')
+const cors = require('cors')
+require('dotenv').config()
+const port = process.env.PORT
+const fetchDataRouter = require('./routers/fetchData');
+const { addMessage } = require("./controllers/fetchData");
 
-mongoose.connect(process.env.USERS_DB, {
-  useNewUrlParser: true, useUnifiedTopology: true
-}).then(()=>{
-    console.log('connected to database successfully');
-}).catch(()=>{
-    console.log('connection to database failed');
-})
-
-app.use(cors())
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-
-// app.use(express.static('client/build'));
-
-app.post('/create/:username',async(req,res)=>{
-  const {username} = req.params  
-  const response = await User.create({username,status:true,messeges:[`welcome ${username}`]})
-  res.send(response)
-})
-
-app.put('/newMessege',async(req,res)=>{
-  const {messege,_id} = req.body  
-  console.log(messege,_id);
- const response = await User.updateOne({ _id }, { $push: { messeges: messege } });
-  res.send(response)
-})
-
-app.post('/stream/messege',async(req,res)=>{
-  const {messege} = req.body  
-
-})
-
-app.get('/users',async(req,res)=>{
-  const users = await User.find()
-  res.send(users)  
+app.use(cors())
+app.use('/fetchData', fetchDataRouter)
+app.post('/addMessage', (req, res) => {
+    const { message, username } = req.body
+    if (!message || !username) return res.status(400).send('not good')
+    addMessage(message, username)
+    res.status(200).send('all good')
 })
 
 
 
-app.put('/setStatus',async(req,res)=>{
-  const {status,_id} = req.body
-  const response = await User.findOneAndUpdate({_id},{status})
-  res.send(response)
-})
-
-
-
-app.listen(process.env.PORT || 8080,()=>{
-    console.log('Server listening in http://localhost:8080')
-  });
+app.listen(port, () => {
+    console.log(`running on ${port}`);
+});

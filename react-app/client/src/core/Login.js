@@ -1,33 +1,42 @@
-import React,{useState,useRef} from "react";
-import '../styles/login.css'
+import React, { useRef } from 'react'
+import "../styles/login.css"
 import { useNavigate } from 'react-router-dom';
 import {niceAlert} from '../helpers/niceAlerts'
-import axios from 'axios'
 
-export default function Login(){
-    const navigate = useNavigate()
+export default function Login({ setUser }) {
     const inputEl = useRef(null)
-
-    const addUserToDb = async(username)=>{
-        const {data} = await axios.post(`http://localhost:8080/create/${username}`)
-        console.log(data);
+    const nav = useNavigate()
+    const sendUser = async () => {
+        const username = inputEl.current.value
+        if (!username) {//validate username
+            niceAlert('type only letters please','error')
+            return
+        }
+        setUser(username)
+        nav('/chat', { replace: true })
+        niceAlert(`Welcome ${username}`,'success')
     }
 
-    const sendUser = async() => {
-        const username = inputEl.current.value
-        if(!username || !(/^[a-zA-Z]+$/.test(username.replace(/ +/g, "")))){//validate username
-        niceAlert('type only letters please ','error')    
-        return
-        }
-        navigate('/chat');
-        niceAlert(`Welcome ${username}`,'success')
-        await addUserToDb(username)
-      }
-
-    return(
-            <div>
-                <input ref={inputEl} name="sendUser" placeholder="Type username" />
-                <button onClick={()=>sendUser()} className="btn btn-primary">Login</button>
+    return (
+        <div className="form-bg">
+        <div className="container">
+            <div className="row">
+                <div className="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6">
+                    <div className="form-container">
+                        <form className="form-horizontal">
+                            <h3 className="title">Login Chat Room</h3>
+                            <div className="form-group">
+                              <span className="input-icon"><i style={{border:'none'}} className="fa fa-user"></i></span>
+                              <input ref={inputEl} className="form-control" placeholder=" Type Username"/>
+                            </div>
+                            <div style={{textAlign:'center'}}>
+                            <button onClick={() => sendUser()} className="btn signin">Log in</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
     )
 }
